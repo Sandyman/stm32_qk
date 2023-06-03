@@ -1,0 +1,3 @@
+[submodule "QP"]
+	path = QP
+	url = https://github.com/QuantumLeaps/qpcpp.git
