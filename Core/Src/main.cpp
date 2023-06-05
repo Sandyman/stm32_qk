@@ -17,14 +17,17 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <Digital.hpp>
 #include "main.h"
 #include "spi.h"
-#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
+#include "qpcpp.hpp"
+#include "blink.hpp"
 
 /* USER CODE END Includes */
 
@@ -47,6 +50,8 @@
 
 /* USER CODE BEGIN PV */
 
+static GPIO_OutputPin _UserLed(LED3_GPIO_Port, LED3_Pin);
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,6 +63,54 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+using namespace QP;
+
+extern "C"
+{
+
+Q_NORETURN Q_onAssert(char const * const module, int_t const loc) {
+    //
+    // NOTE: add here your application-specific error handling
+    //
+    (void)module;
+    (void)loc;
+    QS_ASSERTION(module, loc, 10000U);
+    NVIC_SystemReset();
+}
+
+//............................................................................
+void SysTick_Handler(void); // prototype
+void SysTick_Handler(void) {
+    QK_ISR_ENTRY();   // inform QK about entering an ISR
+    QTimeEvt::TICK_X(0U, nullptr); // process time events for rate 0
+    QK_ISR_EXIT();  // inform QK about exiting an ISR
+}
+
+} // extern "C"
+
+void QF::onStartup(void)
+{
+   SysTick_Config(SystemCoreClock / 100U);
+
+   // assign all priority bits for preemption-prio. and none to sub-prio.
+   NVIC_SetPriorityGrouping(0U);
+
+   // set priorities of ALL ISRs used in the system, see NOTE1
+   //
+   // !!!!!!!!!!!!!!!!!!!!!!!!!!! CAUTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   // Assign a priority to EVERY ISR explicitly by calling NVIC_SetPriority().
+   // DO NOT LEAVE THE ISR PRIORITIES AT THE DEFAULT VALUE!
+   //
+   NVIC_SetPriority(SysTick_IRQn, QF_AWARE_ISR_CMSIS_PRI);
+}
+
+void QK::onIdle()
+{
+   QF_INT_DISABLE();
+
+   QF_INT_ENABLE();
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -67,6 +120,8 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
+   static QEvt const *blinkQSto[10]; // Event queue storage for Blinky
 
   /* USER CODE END 1 */
 
@@ -90,9 +145,17 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_SPI1_Init();
-  MX_TIM7_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  /* Initialise QF framework */
+  QF::init();
+
+  /* Initialise Active Objects here */
+  AO_Blink->start(1U, blinkQSto, Q_DIM(blinkQSto), nullptr, 0U);
+
+  /* Start the kernel (this doesn't return) */
+  QF::run();
 
   /* USER CODE END 2 */
 
@@ -155,27 +218,6 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
-
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM6 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
-
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-
-  /* USER CODE END Callback 1 */
-}
 
 /**
   * @brief  This function is executed in case of error occurrence.

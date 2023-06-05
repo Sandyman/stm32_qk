@@ -2,3 +2,6 @@
 Debug/
 
 stm32_qk.launch
+
+QM/.blink
+
