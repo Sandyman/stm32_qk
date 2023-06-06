@@ -64,6 +64,8 @@ void Error_Handler(void);
 #define INT_KX132_Pin GPIO_PIN_0
 #define INT_KX132_GPIO_Port GPIOB
 #define INT_KX132_EXTI_IRQn EXTI0_IRQn
+#define GLOWBIT_Pin GPIO_PIN_1
+#define GLOWBIT_GPIO_Port GPIOB
 #define nCS_FRAM_Pin GPIO_PIN_8
 #define nCS_FRAM_GPIO_Port GPIOA
 #define SWDIO_Pin GPIO_PIN_13

@@ -6,6 +6,7 @@
  */
 
 #include "bsp.hpp"
+#include "main.h"
 
 namespace BSP
 {

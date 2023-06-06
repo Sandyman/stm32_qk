@@ -31,6 +31,7 @@
 #include "blink.hpp"
 #include "events.hpp"
 #include "bsp.hpp"
+#include "glow.h"
 
 Q_DEFINE_THIS_FILE
 
@@ -72,7 +73,7 @@ Q_STATE_DEF(Blink, blink) {
     switch (e->sig) {
         //${Components::Blink::SM::blink::initial}
         case Q_INIT_SIG: {
-            status_ = tran(&off);
+            status_ = tran(&on);
             break;
         }
         default: {
@@ -91,7 +92,7 @@ Q_STATE_DEF(Blink, off) {
         case Q_ENTRY_SIG: {
             BSP::UserLed.set_low();
 
-            _TimeEvt.armX(msec(1900));
+            _TimeEvt.armX(msec(500));
             status_ = Q_RET_HANDLED;
             break;
         }
@@ -120,9 +121,26 @@ Q_STATE_DEF(Blink, on) {
     switch (e->sig) {
         //${Components::Blink::SM::blink::on}
         case Q_ENTRY_SIG: {
+            const uint8_t angle_difference = 11;
+            static uint8_t angle = 0;
+
             BSP::UserLed.set_high();
 
-            _TimeEvt.armX(msec(100));
+            for (uint_fast8_t i = 0; i < NUM_PIXELS; i++)
+            {
+               // Calculate color
+               uint32_t rgb_color = hsl_to_rgb(angle + (i * angle_difference), 255, 127);
+
+               // Set color
+               glow_set_RGB(i, rgb_color);
+            }
+
+            angle += 6;
+
+            // Write to LED
+            glow_render();
+
+            _TimeEvt.armX(msec(500));
             status_ = Q_RET_HANDLED;
             break;
         }

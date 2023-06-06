@@ -8,7 +8,7 @@
 #ifndef DIGITAL_HPP_
 #define DIGITAL_HPP_
 
-#include "main.h"
+#include "stm32f3xx_hal.h"
 
 /**
  * Pin states

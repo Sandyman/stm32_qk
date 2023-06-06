@@ -17,9 +17,10 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <Digital.hpp>
 #include "main.h"
+#include "dma.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -28,6 +29,7 @@
 
 #include "qpcpp.hpp"
 #include "blink.hpp"
+#include "glow.h"
 
 /* USER CODE END Includes */
 
@@ -49,8 +51,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
-static GPIO_OutputPin _UserLed(LED3_GPIO_Port, LED3_Pin);
 
 /* USER CODE END PV */
 
@@ -101,7 +101,14 @@ void QF::onStartup(void)
    // Assign a priority to EVERY ISR explicitly by calling NVIC_SetPriority().
    // DO NOT LEAVE THE ISR PRIORITIES AT THE DEFAULT VALUE!
    //
-   NVIC_SetPriority(SysTick_IRQn, QF_AWARE_ISR_CMSIS_PRI);
+
+   /* Kernel-unaware interrupts */
+   NVIC_SetPriority(DMA1_Channel3_IRQn, 0U);
+
+   /* Kernel-aware interrupts below */
+   NVIC_SetPriority(EXTI0_IRQn, QF_AWARE_ISR_CMSIS_PRI);
+   NVIC_SetPriority(USART1_IRQn, QF_AWARE_ISR_CMSIS_PRI + 1);
+   NVIC_SetPriority(SysTick_IRQn, QF_AWARE_ISR_CMSIS_PRI + 2);
 }
 
 void QK::onIdle()
@@ -143,9 +150,11 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
   /* Initialise QF framework */
