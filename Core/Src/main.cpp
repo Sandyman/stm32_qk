@@ -28,6 +28,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "qpcpp.hpp"
+#include "accel.hpp"
 #include "blink.hpp"
 #include "glow.h"
 
@@ -128,6 +129,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+   static QEvt const *accelQSto[10]; // Event queue storage for Accel
    static QEvt const *blinkQSto[10]; // Event queue storage for Blinky
 
   /* USER CODE END 1 */
@@ -162,6 +164,8 @@ int main(void)
 
   /* Initialise Active Objects here */
   AO_Blink->start(1U, blinkQSto, Q_DIM(blinkQSto), nullptr, 0U);
+
+  AO_Accel->start(2U, accelQSto, Q_DIM(accelQSto), nullptr, 0U);
 
   /* Start the kernel (this doesn't return) */
   QF::run();

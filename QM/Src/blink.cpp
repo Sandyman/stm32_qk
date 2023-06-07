@@ -32,15 +32,9 @@
 #include "events.hpp"
 #include "bsp.hpp"
 #include "glow.h"
+#include "utils.hpp"
 
 Q_DEFINE_THIS_FILE
-
-/**
- * @brief  Convert milliseconds into Ticks
- * @param  t : Time in milliseconds
- * @return Ticks for QP clock
- */
-inline uint32_t msec(uint32_t t) { return t / 10U; };
 
 //$skip${QP_VERSION} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 // Check for the minimum required QP version
@@ -92,7 +86,7 @@ Q_STATE_DEF(Blink, off) {
         case Q_ENTRY_SIG: {
             BSP::UserLed.set_low();
 
-            _TimeEvt.armX(msec(500));
+            _TimeEvt.armX(msec(20));
             status_ = Q_RET_HANDLED;
             break;
         }
@@ -129,18 +123,18 @@ Q_STATE_DEF(Blink, on) {
             for (uint_fast8_t i = 0; i < NUM_PIXELS; i++)
             {
                // Calculate color
-               uint32_t rgb_color = hsl_to_rgb(angle + (i * angle_difference), 255, 127);
+               uint32_t rgb_color = hsl_to_rgb(angle + (i * angle_difference), 255, 31);
 
                // Set color
                glow_set_RGB(i, rgb_color);
             }
 
-            angle += 6;
+            angle += 2;
 
             // Write to LED
             glow_render();
 
-            _TimeEvt.armX(msec(500));
+            _TimeEvt.armX(msec(20));
             status_ = Q_RET_HANDLED;
             break;
         }

@@ -74,9 +74,9 @@ void glow_set_RGB(uint8_t index, uint32_t rgb)
    uint8_t g = (rgb >> 8) & 0xff;
    uint8_t b = rgb & 0xff;
 
-   grb_arr[3 * index] = scale8(g, 0xB0) >> 2;     // G
-   grb_arr[3 * index + 1] = r >> 2;               // R
-   grb_arr[3 * index + 2] = scale8(b, 0xF0) >> 2; // B
+   grb_arr[3 * index] = scale8(g, 0xB0);     // G
+   grb_arr[3 * index + 1] = r;               // R
+   grb_arr[3 * index + 2] = scale8(b, 0xF0); // B
 }
 
 void glow_render()
@@ -122,14 +122,6 @@ void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
-   if (wr_buf_p >= NUM_PIXELS)
-   {
-      wr_buf_p = 0;
-      HAL_TIM_PWM_Stop_DMA(&htim3, TIM_CHANNEL_4);
-      memset(wr_buf, 0, sizeof(wr_buf));
-      return;
-   }
-
    if (wr_buf_p < NUM_PIXELS)
    {
       for (uint_fast8_t i = 0; i < 8; ++i)
@@ -139,6 +131,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
             wr_buf[i + (j + 3) * 8] = PWM_LO << (((grb_arr[3 * wr_buf_p + j] << i) & 0x80) > 0);
          }
       }
+      wr_buf_p++;
    }
    else if (wr_buf_p < NUM_PIXELS + 2)
    {
@@ -146,6 +139,11 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
       {
          wr_buf[i] = 0;
       }
+      wr_buf_p++;
    }
-   wr_buf_p++;
+   else
+   {
+      wr_buf_p = 0;
+      HAL_TIM_PWM_Stop_DMA(&htim3, TIM_CHANNEL_4);
+   }
 }

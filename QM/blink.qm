@@ -14,7 +14,7 @@
    </operation>
    <statechart properties="0x00">
     <initial target="../1">
-     <initial_glyph conn="14,4,5,3,-10,6,2">
+     <initial_glyph conn="14,4,5,3,-10,4,2">
       <action box="-10,-2,10,2"/>
      </initial_glyph>
     </initial>
@@ -27,7 +27,7 @@
      <state name="off">
       <entry>BSP::UserLed.set_low();
 
-_TimeEvt.armX(msec(500));</entry>
+_TimeEvt.armX(msec(20));</entry>
       <exit>_TimeEvt.disarm();</exit>
       <tran trig="TIMEOUT" target="../../2">
        <tran_glyph conn="28,20,1,3,18">
@@ -48,18 +48,18 @@ BSP::UserLed.set_high();
 for (uint_fast8_t i = 0; i &lt; NUM_PIXELS; i++)
 {
    // Calculate color
-   uint32_t rgb_color = hsl_to_rgb(angle + (i * angle_difference), 255, 127);
+   uint32_t rgb_color = hsl_to_rgb(angle + (i * angle_difference), 255, 31);
 
    // Set color
    glow_set_RGB(i, rgb_color);
 }
 
-angle += 3;
+angle += 2;
 
 // Write to LED
 glow_render();
 
-_TimeEvt.armX(msec(500));</entry>
+_TimeEvt.armX(msec(20));</entry>
       <exit>_TimeEvt.disarm();</exit>
       <tran trig="TIMEOUT" target="../../1">
        <tran_glyph conn="46,24,3,1,-18">
@@ -79,6 +79,28 @@ _TimeEvt.armX(msec(500));</entry>
   <attribute name="AO_Blink" type="QP::QActive * const" visibility="0x00" properties="0x00">
    <code> = &amp;Blink::inst;</code>
   </attribute>
+  <class name="Accel" superclass="qpcpp::QActive">
+   <attribute name="inst" type="Accel" visibility="0x00" properties="0x01"/>
+   <attribute name="_TimeEvt" type="QP::QTimeEvt" visibility="0x02" properties="0x00"/>
+   <operation name="Accel" type="" visibility="0x02" properties="0x00">
+    <code> : QActive(&amp;initial),
+   _TimeEvt(this, TIMEOUT_SIG, 0U)</code>
+   </operation>
+   <statechart properties="0x00">
+    <initial target="../1">
+     <initial_glyph conn="14,4,5,3,-10,4,2">
+      <action box="-10,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="accel">
+     <state_glyph node="6,6,66,46"/>
+    </state>
+    <state_diagram size="80,56"/>
+   </statechart>
+  </class>
+  <attribute name="AO_Accel" type="QP::QActive * const" visibility="0x00" properties="0x00">
+   <code> = &amp;Accel::inst;</code>
+  </attribute>
  </package>
  <directory name="Src">
   <file name="blink.cpp">
@@ -86,19 +108,38 @@ _TimeEvt.armX(msec(500));</entry>
 #include &quot;events.hpp&quot;
 #include &quot;bsp.hpp&quot;
 #include &quot;glow.h&quot;
+#include &quot;utils.hpp&quot;
 
 Q_DEFINE_THIS_FILE
-
-/**
- * @brief  Convert milliseconds into Ticks
- * @param  t : Time in milliseconds
- * @return Ticks for QP clock
- */
-inline uint32_t msec(uint32_t t) { return t / 10U; };
 
 $define(Components::Blink)
 
 $define(Components::AO_Blink)</text>
+  </file>
+  <file name="accel.cpp">
+   <text>#include &quot;accel.hpp&quot;
+#include &quot;events.hpp&quot;
+#include &quot;utils.hpp&quot;
+
+Q_DEFINE_THIS_FILE
+
+$define(Components::Accel)
+
+$define(Components::AO_Accel)</text>
+  </file>
+  <file name="utils.cpp">
+   <text>#include &quot;utils.hpp&quot;
+#include &quot;qassert.h&quot;
+
+Q_DEFINE_THIS_MODULE(&quot;utils&quot;)
+
+
+uint32_t msec(const uint32_t t)
+{
+   Q_REQUIRE(t &gt;= 10U);
+
+   return t / 10U;
+};</text>
   </file>
  </directory>
  <directory name="Inc">
@@ -136,6 +177,34 @@ enum
 $declare${Events}
 
 #endif // EVENTS_HPP</text>
+  </file>
+  <file name="accel.hpp">
+   <text>#ifndef ACCEL_HPP_
+#define ACCEL_HPP_
+
+#include &quot;qpcpp.hpp&quot;
+#include &quot;signals.hpp&quot;
+
+$declare(Components::Accel)
+
+$declare(Components::AO_Accel)
+
+#endif // ACCEL_HPP_</text>
+  </file>
+  <file name="utils.hpp">
+   <text>#ifndef UTILS_HPP_
+#define UTILS_HPP_
+
+#include &lt;stdint.h&gt;
+
+/**
+ * @brief  Convert milliseconds into Ticks
+ * @param  t : Time in milliseconds
+ * @return Ticks for QP clock
+ */
+extern uint32_t msec(const uint32_t t);
+
+#endif // UTILS_HPP_</text>
   </file>
  </directory>
 </model>

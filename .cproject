@@ -58,7 +58,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F3xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_qk/QM/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="../QM/Inc"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.75740117" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -79,7 +79,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F3xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_qk/QM/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="../QM/Inc"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.1682819249" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp"/>
 							</tool>
@@ -103,9 +103,9 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="Src/main.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Core"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QM/Src"/>
-						<entry excluding="3rd_party/|doxygen/|examples/|LICENSES/|test/|zephyr/|src/qv/|src/qxk/|ports/arm-cr/|ports/embos/|ports/freertos/|ports/lint-plus/|ports/msp430/|ports/pic32/|ports/posix/|ports/posix-qutest/|ports/posix-qv/|ports/qt/|ports/sample/|ports/threadx/|ports/uc-os2/|ports/vxworks/|ports/win32/|ports/win32-qutest/|ports/win32-qv/|ports/zephyr/|ports/arm-cm/qutest/|ports/arm-cm/qv/|ports/arm-cm/qxk/|ports/arm-cm/qk/armclang/|ports/arm-cm/qk/iar/|ports/arm-cm/qk/gnu/qs_port.hpp|src/qs/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QP"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QM"/>
+						<entry excluding="3rd_party/|doxygen/|examples/|LICENSES/|test/|zephyr/|src/qv/|src/qxk/|ports/arm-cr/|ports/embos/|ports/freertos/|ports/lint-plus/|ports/msp430/|ports/pic32/|ports/posix/|ports/posix-qutest/|ports/posix-qv/|ports/qt/|ports/sample/|ports/threadx/|ports/uc-os2/|ports/vxworks/|ports/win32/|ports/win32-qutest/|ports/win32-qv/|ports/zephyr/|ports/arm-cm/qutest/|ports/arm-cm/qv/|ports/arm-cm/qxk/|ports/arm-cm/qk/armclang/|ports/arm-cm/qk/iar/|ports/arm-cm/qk/gnu/qs_port.hpp|src/qs/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QP"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -164,9 +164,9 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F3xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_qk/QP/include}&quot;"/>
 									<listOptionValue builtIn="false" value="../QP/ports/arm-cm/qk/gnu"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_qk/QM/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="../QM/Inc"/>
+									<listOptionValue builtIn="false" value="../QP/include"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.482535225" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -184,9 +184,9 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F3xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_qk/QP/include}&quot;"/>
 									<listOptionValue builtIn="false" value="../QP/ports/arm-cm/qk/gnu"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_qk/QM/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="../QP/include"/>
+									<listOptionValue builtIn="false" value="../QM/Inc"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.2105753562" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp"/>
 							</tool>
@@ -211,6 +211,8 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QM"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QP"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
