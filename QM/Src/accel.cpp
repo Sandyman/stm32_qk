@@ -29,10 +29,19 @@
 //
 //$endhead${Src::accel.cpp} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #include "accel.hpp"
+#include "bsp.hpp"
 #include "events.hpp"
 #include "utils.hpp"
 
 Q_DEFINE_THIS_FILE
+
+enum
+{
+   HIGH_WATERMARK_SIG = MAX_PUB_SIG,
+   TILT_SIG,
+   WAKE_UP_SIG,
+   BACK_TO_SLEEP_SIG
+};
 
 //$skip${QP_VERSION} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 // Check for the minimum required QP version
@@ -55,15 +64,163 @@ Accel::Accel()
 //${Components::Accel::Accel::SM} ............................................
 Q_STATE_DEF(Accel, initial) {
     //${Components::Accel::Accel::SM::initial}
-    return tran(&accel);
+    subscribe(ACCEL_DMA_RX_DONE_SIG);
+    subscribe(ACCEL_INT_SIG);
+    return tran(&power_up);
 }
 
 //${Components::Accel::Accel::SM::accel} .....................................
 Q_STATE_DEF(Accel, accel) {
     QP::QState status_;
     switch (e->sig) {
+        //${Components::Accel::Accel::SM::accel::ACCEL_INT}
+        case ACCEL_INT_SIG: {
+            status_ = Q_RET_HANDLED;
+            break;
+        }
         default: {
             status_ = super(&top);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::Accel::Accel::SM::accel::power_up} ...........................
+Q_STATE_DEF(Accel, power_up) {
+    QP::QState status_;
+    switch (e->sig) {
+        //${Components::Accel::Accel::SM::accel::power_up}
+        case Q_ENTRY_SIG: {
+            BSP::Accel.PowerUp();
+
+            _TimeEvt.armX(msec(150));
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::Accel::Accel::SM::accel::power_up}
+        case Q_EXIT_SIG: {
+            _TimeEvt.disarm();
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::Accel::Accel::SM::accel::power_up::TIMEOUT}
+        case TIMEOUT_SIG: {
+            status_ = tran(&initialise);
+            break;
+        }
+        default: {
+            status_ = super(&accel);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::Accel::Accel::SM::accel::initialise} .........................
+Q_STATE_DEF(Accel, initialise) {
+    QP::QState status_;
+    switch (e->sig) {
+        //${Components::Accel::Accel::SM::accel::initialise}
+        case Q_ENTRY_SIG: {
+            BSP::Accel.Initialise();
+
+            _TimeEvt.armX(msec(50));
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::Accel::Accel::SM::accel::initialise}
+        case Q_EXIT_SIG: {
+            _TimeEvt.disarm();
+            status_ = Q_RET_HANDLED;
+            break;
+        }
+        //${Components::Accel::Accel::SM::accel::initialise::TIMEOUT}
+        case TIMEOUT_SIG: {
+            status_ = tran(&idle);
+            break;
+        }
+        default: {
+            status_ = super(&accel);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::Accel::Accel::SM::accel::idle} ...............................
+Q_STATE_DEF(Accel, idle) {
+    QP::QState status_;
+    switch (e->sig) {
+        //${Components::Accel::Accel::SM::accel::idle::ACCEL_INT}
+        case ACCEL_INT_SIG: {
+            /*
+             * An interrupt was received
+             * from the accelerometer.
+             */
+            status_ = tran(&handle_irq);
+            break;
+        }
+        default: {
+            status_ = super(&accel);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::Accel::Accel::SM::accel::active} .............................
+Q_STATE_DEF(Accel, active) {
+    QP::QState status_;
+    switch (e->sig) {
+        //${Components::Accel::Accel::SM::accel::active::HIGH_WATERMARK}
+        case HIGH_WATERMARK_SIG: {
+            status_ = tran(&high_watermark);
+            break;
+        }
+        //${Components::Accel::Accel::SM::accel::active::TILT}
+        case TILT_SIG: {
+            status_ = tran(&tilt);
+            break;
+        }
+        default: {
+            status_ = super(&accel);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::Accel::Accel::SM::accel::active::handle_irq} .................
+Q_STATE_DEF(Accel, handle_irq) {
+    QP::QState status_;
+    switch (e->sig) {
+        default: {
+            status_ = super(&active);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::Accel::Accel::SM::accel::active::high_watermark} .............
+Q_STATE_DEF(Accel, high_watermark) {
+    QP::QState status_;
+    switch (e->sig) {
+        default: {
+            status_ = super(&active);
+            break;
+        }
+    }
+    return status_;
+}
+
+//${Components::Accel::Accel::SM::accel::active::tilt} .......................
+Q_STATE_DEF(Accel, tilt) {
+    QP::QState status_;
+    switch (e->sig) {
+        default: {
+            status_ = super(&active);
             break;
         }
     }

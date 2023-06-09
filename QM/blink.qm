@@ -26,10 +26,19 @@ $define(Components::Blink::AO_Blink)</text>
   </file>
   <file name="accel.cpp">
    <text>#include &quot;accel.hpp&quot;
+#include &quot;bsp.hpp&quot;
 #include &quot;events.hpp&quot;
 #include &quot;utils.hpp&quot;
 
 Q_DEFINE_THIS_FILE
+
+enum
+{
+   HIGH_WATERMARK_SIG = MAX_PUB_SIG,
+   TILT_SIG,
+   WAKE_UP_SIG,
+   BACK_TO_SLEEP_SIG
+};
 
 $define(Components::Accel::Accel)
 
@@ -65,8 +74,8 @@ $declare(Components::Blink::AO_Blink)
 #endif // BLINK_HPP_</text>
   </file>
   <file name="signals.hpp">
-   <text>#ifndef SIGNALS_HPP
-#define SIGNALS_HPP
+   <text>#ifndef SIGNALS_HPP_
+#define SIGNALS_HPP_
 
 enum
 {
@@ -76,12 +85,10 @@ enum
    ACCEL_INT_SIG,
    ACCEL_DMA_RX_DONE_SIG,
 
-   MAX_PUB_SIG,
-
-   MAX_SIG
+   MAX_PUB_SIG
 };
 
-#endif // SIGNALS_HPP</text>
+#endif // SIGNALS_HPP_</text>
   </file>
   <file name="events.hpp">
    <text>#ifndef EVENTS_HPP

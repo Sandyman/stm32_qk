@@ -50,6 +50,44 @@ private:
 protected:
     Q_STATE_DECL(initial);
     Q_STATE_DECL(accel);
+    /*
+     * Initialise the accelerometer.
+     * It is assumed in this project
+     * that it will always stay on.
+     */
+    Q_STATE_DECL(power_up);
+    /*
+     * Set up the accelerometer
+     * with the default settings.
+     */
+    Q_STATE_DECL(initialise);
+    /*
+     * The accelerometer only performs
+     * background tasks. It is still
+     * powered on, but no data is being
+     * requested by the application.
+     */
+    Q_STATE_DECL(idle);
+    /*
+     * Something happend and the
+     * accelerometer is now actively
+     * used, for example, by the
+     * application. Alternatively,
+     * an interrupt may have occurred.
+     */
+    Q_STATE_DECL(active);
+    /*
+     * Handle interrupt from
+     * accelerometer device.
+     * Depending on the source
+     * of the interrupt, e.g.,
+     * WUP/BTS, TILT, etc., it
+     * will post the appropriate
+     * event to itself.
+     */
+    Q_STATE_DECL(handle_irq);
+    Q_STATE_DECL(high_watermark);
+    Q_STATE_DECL(tilt);
 }; // class Accel
 //$enddecl${Components::Accel::Accel} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

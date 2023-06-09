@@ -8,15 +8,118 @@
    _TimeEvt(this, TIMEOUT_SIG, 0U)</code>
   </operation>
   <statechart properties="0x00">
-   <initial target="../1">
-    <initial_glyph conn="14,4,5,3,-10,4,2">
+   <initial target="../1/1">
+    <action>subscribe(ACCEL_DMA_RX_DONE_SIG);
+subscribe(ACCEL_INT_SIG);</action>
+    <initial_glyph conn="14,4,5,3,-10,8,6">
      <action box="-10,-2,10,2"/>
     </initial_glyph>
    </initial>
    <state name="accel">
-    <state_glyph node="6,6,66,46"/>
+    <tran trig="ACCEL_INT">
+     <action brief="ignore"/>
+     <tran_glyph conn="6,74,3,-1,10">
+      <action box="0,-2,9,2"/>
+     </tran_glyph>
+    </tran>
+    <state name="power_up">
+     <documentation>/*
+ * Initialise the accelerometer.
+ * It is assumed in this project
+ * that it will always stay on.
+ */</documentation>
+     <entry brief="power-up">BSP::Accel.PowerUp();
+
+_TimeEvt.armX(msec(150));</entry>
+     <exit>_TimeEvt.disarm();</exit>
+     <tran trig="TIMEOUT" target="../../2">
+      <tran_glyph conn="10,18,3,3,26,-4,6">
+       <action box="1,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="10,10,20,12">
+      <entry box="1,2,9,2"/>
+      <exit box="1,4,6,2"/>
+     </state_glyph>
+    </state>
+    <state name="initialise">
+     <documentation>/*
+ * Set up the accelerometer
+ * with the default settings.
+ */</documentation>
+     <entry brief="init">BSP::Accel.Initialise();
+
+_TimeEvt.armX(msec(50));</entry>
+     <exit>_TimeEvt.disarm();</exit>
+     <tran trig="TIMEOUT" target="../../3">
+      <tran_glyph conn="42,18,3,3,32">
+       <action box="1,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="42,10,20,12">
+      <entry box="1,2,6,2"/>
+      <exit box="1,4,6,2"/>
+     </state_glyph>
+    </state>
+    <state name="idle">
+     <documentation>/*
+ * The accelerometer only performs
+ * background tasks. It is still
+ * powered on, but no data is being
+ * requested by the application.
+ */</documentation>
+     <tran trig="ACCEL_INT" target="../../4/2">
+      <action>/*
+ * An interrupt was received
+ * from the accelerometer.
+ */</action>
+      <tran_glyph conn="94,34,1,1,-36">
+       <action box="-9,-2,9,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="74,10,20,60"/>
+    </state>
+    <state name="active">
+     <documentation>/*
+ * Something happend and the
+ * accelerometer is now actively
+ * used, for example, by the
+ * application. Alternatively,
+ * an interrupt may have occurred.
+ */</documentation>
+     <tran trig="HIGH_WATERMARK" target="../3">
+      <tran_glyph conn="10,62,3,3,16">
+       <action box="1,-2,14,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="TILT" target="../4">
+      <tran_glyph conn="10,50,3,3,16">
+       <action box="1,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state name="handle_irq">
+      <documentation>/*
+ * Handle interrupt from
+ * accelerometer device.
+ * Depending on the source
+ * of the interrupt, e.g.,
+ * WUP/BTS, TILT, etc., it
+ * will post the appropriate
+ * event to itself.
+ */</documentation>
+      <state_glyph node="42,30,16,10"/>
+     </state>
+     <state name="high_watermark">
+      <state_glyph node="26,58,14,10"/>
+     </state>
+     <state name="tilt">
+      <state_glyph node="26,46,14,10"/>
+     </state>
+     <state_glyph node="10,26,52,44"/>
+    </state>
+    <state_glyph node="6,6,92,70"/>
    </state>
-   <state_diagram size="80,56"/>
+   <state_diagram size="100,78"/>
   </statechart>
  </class>
  <attribute name="AO_Accel" type="QP::QActive * const" visibility="0x00" properties="0x00">

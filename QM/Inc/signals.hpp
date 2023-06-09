@@ -28,8 +28,8 @@
 // <info@state-machine.com>
 //
 //$endhead${Inc::signals.hpp} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#ifndef SIGNALS_HPP
-#define SIGNALS_HPP
+#ifndef SIGNALS_HPP_
+#define SIGNALS_HPP_
 
 enum
 {
@@ -39,9 +39,7 @@ enum
    ACCEL_INT_SIG,
    ACCEL_DMA_RX_DONE_SIG,
 
-   MAX_PUB_SIG,
-
-   MAX_SIG
+   MAX_PUB_SIG
 };
 
-#endif // SIGNALS_HPP
+#endif // SIGNALS_HPP_
