@@ -14,8 +14,6 @@ extern "C" {
 
 #include "stm32f3xx_hal.h"
 
-#define GLOW_TIMER   (80)
-
 /* Number of pixels in the glow device */
 #define NUM_PIXELS   (13)
 

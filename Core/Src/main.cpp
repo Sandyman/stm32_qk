@@ -30,6 +30,8 @@
 #include "qpcpp.hpp"
 #include "accel.hpp"
 #include "blink.hpp"
+#include "bsp.hpp"
+#include "events.hpp"
 #include "glow.h"
 
 /* USER CODE END Includes */
@@ -52,6 +54,20 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
+/* Subscriber list storage (only needed for public events) */
+static QP::QSubscrList SubscrSto[MAX_PUB_SIG];
+
+/* Event pool(s) - a maximum of 3 is allowed, and they must be created with
+ * increasing block size. See: "Practical UML Statecharts in C/C++, Second
+ * Edition", by Dr Miro Samek, page 13 notes (7,8) and Chapter 7 (spec. 7.5).
+ */
+
+#if 0
+/* Small event pool */
+static QF_MPOOL_EL(AccelDataEvt) smlPoolSto[2];
+#endif
+
 
 /* USER CODE END PV */
 
@@ -76,6 +92,13 @@ Q_NORETURN Q_onAssert(char const * const module, int_t const loc) {
     (void)module;
     (void)loc;
     QS_ASSERTION(module, loc, 10000U);
+
+    while (true) {
+       BSP::UserLed.set_high();
+       HAL_Delay(250);
+       BSP::UserLed.set_low();
+       HAL_Delay(250);
+    }
     NVIC_SystemReset();
 }
 
@@ -116,7 +139,14 @@ void QK::onIdle()
 {
    QF_INT_DISABLE();
 
+   BSP::UserLed.set_high();
+
    QF_INT_ENABLE();
+
+   /* Wait for interrupt to wake up the system */
+   __WFI();
+
+   BSP::UserLed.set_low();
 }
 
 /* USER CODE END 0 */
@@ -160,7 +190,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* Initialise QF framework */
-  QF::init();
+  QP::QF::init();
+
+  QP::QF::psInit(SubscrSto, Q_DIM(SubscrSto));
+
+#if 0
+  QP::QF::poolInit(smlPoolSto, sizeof(smlPoolSto), sizeof(smlPoolSto[0]));
+#endif
 
   /* Initialise Active Objects here */
   AO_Blink->start(1U, blinkQSto, Q_DIM(blinkQSto), nullptr, 0U);
@@ -229,6 +265,37 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+/**
+  * @brief  EXTI line detection callback.
+  * @param  GPIO_Pin Specifies the port pin connected to corresponding EXTI line.
+  * @retval None
+  */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+   static QP::QEvt const accelIntEvt = { ACCEL_INT_SIG, 0U, 0U };
+
+   if (GPIO_Pin == INT_KX132_Pin)
+   {
+      QP::QF::PUBLISH(&accelIntEvt, nullptr);
+   }
+}
+
+/**
+  * @brief  Rx Transfer completed callback.
+  * @param  hspi pointer to a SPI_HandleTypeDef structure that contains
+  *               the configuration information for SPI module.
+  * @retval None
+  */
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+   static QP::QEvt const accelDMARxDoneEvent = { ACCEL_DMA_RX_DONE_SIG, 0U, 0U };
+
+   if (hspi->Instance == SPI1)
+   {
+      QP::QF::PUBLISH(&accelDMARxDoneEvent, nullptr);
+   }
+}
 
 /* USER CODE END 4 */
 

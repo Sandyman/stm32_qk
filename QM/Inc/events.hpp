@@ -32,6 +32,12 @@
 #define EVENTS_HPP
 
 //$declare${Events} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+//${Events::AccelDataEvt} ....................................................
+class AccelDataEvt : public QP::QEvt {
+public:
+    uint8_t data[60];
+}; // class AccelDataEvt
 //$enddecl${Events} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #endif // EVENTS_HPP

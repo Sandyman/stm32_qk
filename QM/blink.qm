@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model version="5.2.1" links="0">
  <framework name="qpcpp"/>
- <package name="Events" stereotype="0x01"/>
+ <package name="Events" stereotype="0x01">
+  <class name="AccelDataEvt" superclass="qpcpp::QEvt">
+   <attribute name="data[60]" type="uint8_t" visibility="0x00" properties="0x00"/>
+  </class>
+ </package>
  <package name="Components" stereotype="0x02">
   <package file="./blink.qmp"/>
   <package file="./accel.qmp"/>
@@ -67,6 +71,11 @@ $declare(Components::Blink::AO_Blink)
 enum
 {
    TIMEOUT_SIG = QP::Q_USER_SIG,
+
+   ACCEL_DATA_SIG,
+   ACCEL_INT_SIG,
+   ACCEL_DMA_RX_DONE_SIG,
+
    MAX_PUB_SIG,
 
    MAX_SIG

@@ -103,9 +103,9 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="Src/main.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Core"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QM"/>
 						<entry excluding="3rd_party/|doxygen/|examples/|LICENSES/|test/|zephyr/|src/qv/|src/qxk/|ports/arm-cr/|ports/embos/|ports/freertos/|ports/lint-plus/|ports/msp430/|ports/pic32/|ports/posix/|ports/posix-qutest/|ports/posix-qv/|ports/qt/|ports/sample/|ports/threadx/|ports/uc-os2/|ports/vxworks/|ports/win32/|ports/win32-qutest/|ports/win32-qv/|ports/zephyr/|ports/arm-cm/qutest/|ports/arm-cm/qv/|ports/arm-cm/qxk/|ports/arm-cm/qk/armclang/|ports/arm-cm/qk/iar/|ports/arm-cm/qk/gnu/qs_port.hpp|src/qs/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QP"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QM"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -209,10 +209,10 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QM"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QP"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="QM"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

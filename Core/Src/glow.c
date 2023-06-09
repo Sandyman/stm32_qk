@@ -12,8 +12,6 @@
 
 extern DMA_HandleTypeDef hdma_tim3_ch4_up;
 
-/* PWM value for logical 1 */
-#define PWM_HI       (( 2 * (GLOW_TIMER - 1)) / 3)
 /* PWM value for logical 0 */
 #define PWM_LO       (( 1 * (GLOW_TIMER - 1)) / 3)
 

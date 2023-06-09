@@ -84,9 +84,7 @@ Q_STATE_DEF(Blink, off) {
     switch (e->sig) {
         //${Components::Blink::Blink::SM::blink::off}
         case Q_ENTRY_SIG: {
-            BSP::UserLed.set_low();
-
-            _TimeEvt.armX(msec(40));
+            _TimeEvt.armX(msec(50));
             status_ = Q_RET_HANDLED;
             break;
         }
@@ -118,12 +116,10 @@ Q_STATE_DEF(Blink, on) {
             const uint8_t angle_difference = 11;
             static uint8_t angle = 0;
 
-            BSP::UserLed.set_high();
-
             for (uint_fast8_t i = 0; i < NUM_PIXELS; i++)
             {
                // Calculate color
-               uint32_t rgb_color = hsl_to_rgb(angle + (i * angle_difference), 255, 31);
+               uint32_t rgb_color = hsl_to_rgb(angle + (i * angle_difference), 255, 63);
 
                // Set color
                glow_set_RGB(i, rgb_color);
@@ -134,7 +130,7 @@ Q_STATE_DEF(Blink, on) {
             // Write to LED
             glow_render();
 
-            _TimeEvt.armX(msec(40));
+            _TimeEvt.armX(msec(50));
             status_ = Q_RET_HANDLED;
             break;
         }
