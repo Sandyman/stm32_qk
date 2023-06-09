@@ -34,9 +34,9 @@
 #include "qpcpp.hpp"
 #include "signals.hpp"
 
-//$declare${Components::Accel} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//$declare${Components::Accel::Accel} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-//${Components::Accel} .......................................................
+//${Components::Accel::Accel} ................................................
 class Accel : public QP::QActive {
 public:
     static Accel inst;
@@ -51,12 +51,12 @@ protected:
     Q_STATE_DECL(initial);
     Q_STATE_DECL(accel);
 }; // class Accel
-//$enddecl${Components::Accel} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//$enddecl${Components::Accel::Accel} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-//$declare${Components::AO_Accel} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//$declare${Components::Accel::AO_Accel} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-//${Components::AO_Accel} ....................................................
+//${Components::Accel::AO_Accel} .............................................
 extern QP::QActive * const AO_Accel;
-//$enddecl${Components::AO_Accel} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//$enddecl${Components::Accel::AO_Accel} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #endif // ACCEL_HPP_

@@ -34,9 +34,9 @@
 #include "qpcpp.hpp"
 #include "signals.hpp"
 
-//$declare${Components::Blink} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//$declare${Components::Blink::Blink} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-//${Components::Blink} .......................................................
+//${Components::Blink::Blink} ................................................
 class Blink : public QP::QActive {
 public:
     static Blink inst;
@@ -53,12 +53,12 @@ protected:
     Q_STATE_DECL(off);
     Q_STATE_DECL(on);
 }; // class Blink
-//$enddecl${Components::Blink} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//$enddecl${Components::Blink::Blink} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-//$declare${Components::AO_Blink} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//$declare${Components::Blink::AO_Blink} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-//${Components::AO_Blink} ....................................................
+//${Components::Blink::AO_Blink} .............................................
 extern QP::QActive * const AO_Blink;
-//$enddecl${Components::AO_Blink} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//$enddecl${Components::Blink::AO_Blink} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #endif // BLINK_HPP_

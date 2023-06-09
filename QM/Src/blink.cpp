@@ -43,29 +43,29 @@ Q_DEFINE_THIS_FILE
 #endif
 //$endskip${QP_VERSION} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-//$define${Components::Blink} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//$define${Components::Blink::Blink} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-//${Components::Blink} .......................................................
+//${Components::Blink::Blink} ................................................
 Blink Blink::inst __CCMRAM;
 
 
-//${Components::Blink::Blink} ................................................
+//${Components::Blink::Blink::Blink} .........................................
 Blink::Blink()
  : QActive(&initial),
    _TimeEvt(this, TIMEOUT_SIG, 0U)
 {}
 
-//${Components::Blink::SM} ...................................................
+//${Components::Blink::Blink::SM} ............................................
 Q_STATE_DEF(Blink, initial) {
-    //${Components::Blink::SM::initial}
+    //${Components::Blink::Blink::SM::initial}
     return tran(&blink);
 }
 
-//${Components::Blink::SM::blink} ............................................
+//${Components::Blink::Blink::SM::blink} .....................................
 Q_STATE_DEF(Blink, blink) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::Blink::SM::blink::initial}
+        //${Components::Blink::Blink::SM::blink::initial}
         case Q_INIT_SIG: {
             status_ = tran(&on);
             break;
@@ -78,25 +78,25 @@ Q_STATE_DEF(Blink, blink) {
     return status_;
 }
 
-//${Components::Blink::SM::blink::off} .......................................
+//${Components::Blink::Blink::SM::blink::off} ................................
 Q_STATE_DEF(Blink, off) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::Blink::SM::blink::off}
+        //${Components::Blink::Blink::SM::blink::off}
         case Q_ENTRY_SIG: {
             BSP::UserLed.set_low();
 
-            _TimeEvt.armX(msec(20));
+            _TimeEvt.armX(msec(40));
             status_ = Q_RET_HANDLED;
             break;
         }
-        //${Components::Blink::SM::blink::off}
+        //${Components::Blink::Blink::SM::blink::off}
         case Q_EXIT_SIG: {
             _TimeEvt.disarm();
             status_ = Q_RET_HANDLED;
             break;
         }
-        //${Components::Blink::SM::blink::off::TIMEOUT}
+        //${Components::Blink::Blink::SM::blink::off::TIMEOUT}
         case TIMEOUT_SIG: {
             status_ = tran(&on);
             break;
@@ -109,11 +109,11 @@ Q_STATE_DEF(Blink, off) {
     return status_;
 }
 
-//${Components::Blink::SM::blink::on} ........................................
+//${Components::Blink::Blink::SM::blink::on} .................................
 Q_STATE_DEF(Blink, on) {
     QP::QState status_;
     switch (e->sig) {
-        //${Components::Blink::SM::blink::on}
+        //${Components::Blink::Blink::SM::blink::on}
         case Q_ENTRY_SIG: {
             const uint8_t angle_difference = 11;
             static uint8_t angle = 0;
@@ -134,17 +134,17 @@ Q_STATE_DEF(Blink, on) {
             // Write to LED
             glow_render();
 
-            _TimeEvt.armX(msec(20));
+            _TimeEvt.armX(msec(40));
             status_ = Q_RET_HANDLED;
             break;
         }
-        //${Components::Blink::SM::blink::on}
+        //${Components::Blink::Blink::SM::blink::on}
         case Q_EXIT_SIG: {
             _TimeEvt.disarm();
             status_ = Q_RET_HANDLED;
             break;
         }
-        //${Components::Blink::SM::blink::on::TIMEOUT}
+        //${Components::Blink::Blink::SM::blink::on::TIMEOUT}
         case TIMEOUT_SIG: {
             status_ = tran(&off);
             break;
@@ -156,10 +156,10 @@ Q_STATE_DEF(Blink, on) {
     }
     return status_;
 }
-//$enddef${Components::Blink} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//$enddef${Components::Blink::Blink} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-//$define${Components::AO_Blink} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//$define${Components::Blink::AO_Blink} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-//${Components::AO_Blink} ....................................................
+//${Components::Blink::AO_Blink} .............................................
 QP::QActive * const AO_Blink  = &Blink::inst;
-//$enddef${Components::AO_Blink} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//$enddef${Components::Blink::AO_Blink} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

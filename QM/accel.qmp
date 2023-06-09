@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package name="Accel" stereotype="0x02">
+ <class name="Accel" superclass="qpcpp::QActive">
+  <attribute name="inst" type="Accel" visibility="0x00" properties="0x01"/>
+  <attribute name="_TimeEvt" type="QP::QTimeEvt" visibility="0x02" properties="0x00"/>
+  <operation name="Accel" type="" visibility="0x02" properties="0x00">
+   <code> : QActive(&amp;initial),
+   _TimeEvt(this, TIMEOUT_SIG, 0U)</code>
+  </operation>
+  <statechart properties="0x00">
+   <initial target="../1">
+    <initial_glyph conn="14,4,5,3,-10,4,2">
+     <action box="-10,-2,10,2"/>
+    </initial_glyph>
+   </initial>
+   <state name="accel">
+    <state_glyph node="6,6,66,46"/>
+   </state>
+   <state_diagram size="80,56"/>
+  </statechart>
+ </class>
+ <attribute name="AO_Accel" type="QP::QActive * const" visibility="0x00" properties="0x00">
+  <code> = &amp;Accel::inst;</code>
+ </attribute>
+</package>

@@ -41,24 +41,24 @@ Q_DEFINE_THIS_FILE
 #endif
 //$endskip${QP_VERSION} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-//$define${Components::Accel} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-//${Components::Accel} .......................................................
-Accel Accel::inst;
+//$define${Components::Accel::Accel} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 //${Components::Accel::Accel} ................................................
+Accel Accel::inst;
+
+//${Components::Accel::Accel::Accel} .........................................
 Accel::Accel()
  : QActive(&initial),
    _TimeEvt(this, TIMEOUT_SIG, 0U)
 {}
 
-//${Components::Accel::SM} ...................................................
+//${Components::Accel::Accel::SM} ............................................
 Q_STATE_DEF(Accel, initial) {
-    //${Components::Accel::SM::initial}
+    //${Components::Accel::Accel::SM::initial}
     return tran(&accel);
 }
 
-//${Components::Accel::SM::accel} ............................................
+//${Components::Accel::Accel::SM::accel} .....................................
 Q_STATE_DEF(Accel, accel) {
     QP::QState status_;
     switch (e->sig) {
@@ -69,10 +69,10 @@ Q_STATE_DEF(Accel, accel) {
     }
     return status_;
 }
-//$enddef${Components::Accel} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//$enddef${Components::Accel::Accel} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-//$define${Components::AO_Accel} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//$define${Components::Accel::AO_Accel} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-//${Components::AO_Accel} ....................................................
+//${Components::Accel::AO_Accel} .............................................
 QP::QActive * const AO_Accel  = &Accel::inst;
-//$enddef${Components::AO_Accel} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//$enddef${Components::Accel::AO_Accel} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
